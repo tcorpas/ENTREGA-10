@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Shooter Game</title>
   <link type="text/css" rel="stylesheet" href="game.css">
+  <link rel="manifest" href="manifest.json">
   <meta name="viewport" content="user-scalable=0"/>
   <script src="Game.js" type="text/javascript"></script>
   <script src="Entity.js" type="text/javascript"></script>
@@ -12,11 +13,33 @@
   <script src="Opponent.js" type="text/javascript"></script>
   <script src="Shot.js" type="text/javascript"></script>
   <script src="main.js" type="text/javascript"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(function(registration) {
+            // El Service Worker se ha registrado con éxito
+            console.log('Service Worker registrado:', registration);
+          })
+          .catch(function(error) {
+            // Error al registrar el Service Worker
+            console.error('Error al registrar el Service Worker:', error);
+          });
+      });
+    }
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      installPWA();
+    });
+  </script>  
+  
 </head>
 
 <body>
   <button id="pause" class="gamebutton" onclick="this.blur();">Pausa</button>
   <button id="reset" class="gamebutton" onclick="this.blur();">NUEVA PARTIDA</button>
+  <button id="install-button" class="gamebutton" onclick="installPWA()">Instalar</button>
 </body>
 
 </html>

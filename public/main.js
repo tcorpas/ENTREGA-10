@@ -29,9 +29,70 @@ function collision (div1, div2) {
     return !(a.bottom < b.top || a.top > b.bottom || a.right < b.left || a.left > b.right);
 
 }
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(function(registration) {
+        // El Service Worker se ha registrado con éxito
+        console.log('Service Worker registrado:', registration);
+      })
+      .catch(function(error) {
+        // Error al registrar el Service Worker
+        console.error('Error al registrar el Service Worker:', error);
+      });
+}
+
+// Verificar si la PWA ya está instalada
+if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+    hideInstallButton(); // La PWA ya está instalada, ocultar el botón de instalación
+  } else {
+    showInstallButton(); // La PWA no está instalada, mostrar el botón de instalación
+  }
+  
+  // Función para instalar la PWA
+  function installPWA() {
+    const installButton = document.getElementById('install-button');
+  
+    // Ocultar el botón de instalación
+    installButton.style.display = 'none';
+  
+    // Registrar el Service Worker y mostrar el mensaje de instalación
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      const promptEvent = event;
+      promptEvent.prompt();
+  
+      // Escuchar el resultado de la instalación
+      promptEvent.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          // La PWA fue instalada
+          hideInstallButton();
+        } else {
+          // La instalación de la PWA fue cancelada
+          showInstallButton();
+        }
+      });
+    });
+  }
+  
+  // Función para mostrar el botón de instalación
+  function showInstallButton() {
+    const installButton = document.getElementById('install-button');
+    installButton.style.display = 'block';
+  }
+  
+  // Función para ocultar el botón de instalación
+  function hideInstallButton() {
+    const installButton = document.getElementById('install-button');
+    installButton.style.display = 'none';
+  }
+  
+
 var game;
 document.addEventListener("DOMContentLoaded", () => {
         game = new Game();
         game.start();
     }
 );
+
+  
